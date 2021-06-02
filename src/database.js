@@ -1,0 +1,1 @@
+/* Archivo para definir la coleccion de la base de datos*/
