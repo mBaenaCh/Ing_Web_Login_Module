@@ -34,5 +34,7 @@ employeeSchema.statics.encodePassword = async (password) =>{
 }
 
 //Aqui iria tambien el metodo de comparacion de contraseñas para el SignIn
-
+employeeSchema.statics.comparePassword = async (password, receivedPassword) =>{
+    return await bcrypt.compare(password, receivedPassword)
+}
 export default model('Employee', employeeSchema);

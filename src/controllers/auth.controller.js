@@ -1,4 +1,6 @@
 import Employee from '../models/Employee'
+import jwt from 'jsonwebtoken'
+import config from '../config'
 
 //Register
 export const signUp = async (req, res) => {
@@ -23,5 +25,17 @@ export const signUp = async (req, res) => {
 
 //Login
 export const signIn = async (req, res) => {
-    res.json('signin')
+    //Encontrar el empleado por el username
+    const employeeFound = await Employee.findOne({username: req.body.username})
+    if (!employeeFound) return res.status(400).json({message: "User not found"})
+
+    //Comparar la contraseña ingresada con la guardada en la BD
+    const matchPassword = await Employee.comparePassword(req.body.password, employeeFound.password)
+    if (!matchPassword) return res.status(401).json({token: null, message: 'Password or username is invalid'}) 
+    
+    //Crear el token
+    const token = jwt.sign({id: employeeFound._id}, config.SECRET, {
+        expiresIn: 86400
+    })
+    res.json({token: token})
 }
