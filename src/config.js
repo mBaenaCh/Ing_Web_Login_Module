@@ -1,9 +1,4 @@
-/*Archivo de propiedades de configuracion:
-
-- Conexion base de datos
-- User base de datos
-- Puerto aplicacion*/
-
 export default {
-    SECRET: 'nursery_pet-api'
-}
+  JWT_SECRET: process.env.JWT_SECRET,
+  MONGODB_URI: process.env.MONGODB_URI,
+};

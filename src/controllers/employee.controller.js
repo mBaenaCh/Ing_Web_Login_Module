@@ -1,36 +1,53 @@
-/* Archivo que define las funcionalidades a usar en cada ruta */
-import Employee from '../models/Employee'
+import Employee from '../models/Employee';
+import { newEmployeeService } from '../services/employee.service';
 
-export const createEmployee = async (req,res) => {
-    const {name, lastName, email, username} = req.body
+export const createEmployee = async (req, res) => {
+  try {
+    const { name, last_name, email, username } = req.body;
+    const newEmployee = new Employee({ name, last_name, email, username });
+    const savedEmployee = await newEmployee.save();
+    await newEmployeeService(email, savedEmployee._id, name);
+    return res.status(201).json(savedEmployee);
+  } catch (error) {
+    return res.status(500).json({ message: 'Lo sentimos, ha ocurrido un problema' });
+  }
+};
 
-    const newEmployee = new Employee({name, lastName, email, username})
+export const getEmployees = async (req, res) => {
+  try {
+    const employees = await Employee.find();
+    return res.status(200).json(employees);
+  } catch (error) {
+    return res.status(500).json({ message: 'Lo sentimos, ha ocurrido un problema' });
+  }
+};
 
-    const savedEmployee = await newEmployee.save()
+export const getEmployeeById = async (req, res) => {
+  try {
+    const employee = await Employee.findById(req.params.employeeId);
+    return res.status(200).json(employee);
+  } catch (error) {
+    return res.status(500).json({ message: 'Lo sentimos, ha ocurrido un problema' });
+  }
+};
 
-    res.status(201).json(savedEmployee)
-}
-
-export const getEmployees = async (req,res) => {
-    const employees = await Employee.find()
-    res.json(employees)
-}
-
-export const getEmployeeById = async (req,res) => {
-    const employee = await Employee.findById(req.params.employeeId)
-    res.status(200).json(employee)
-}
-
-//Se puede usar modificando (en el body) el valor de password
-export const updateEmployeeById = async (req,res) => {
+export const updateEmployeeById = async (req, res) => {
+  try {
     const updatedEmployee = await Employee.findByIdAndUpdate(req.params.employeeId, req.body, {
-        new: true
-    })
-    res.status(200).json(updatedEmployee)
+      new: true,
+    });
+    return res.status(200).json(updatedEmployee);
+  } catch (error) {
+    return res.status(500).json({ message: 'Lo sentimos, ha ocurrido un problema' });
+  }
+};
 
-}
-
-export const deleteEmployeeById = async (req,res) => {
-    await Employee.findByIdAndDelete(req.params.employeeId)
-    res.status(204).json()
-}
+export const deleteEmployeeById = async (req, res) => {
+  try {
+    const { employeeId } = req.params;
+    await Employee.findByIdAndDelete(employeeId);
+    return res.status(204).json({ message: 'Employee deleted' });
+  } catch (error) {
+    return res.status(500).json({ message: 'Lo sentimos, ha ocurrido un problema' });
+  }
+};

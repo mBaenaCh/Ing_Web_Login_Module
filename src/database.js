@@ -1,14 +1,11 @@
-/* Archivo para definir la coleccion de la base de datos*/
-import mongoose from 'mongoose'
-import dotenv from 'dotenv'
+import mongoose from 'mongoose';
 
-dotenv.config()
-
-mongoose.connect(process.env.MONGODB_URI, {
+mongoose
+  .connect('mongodb+srv://ingweb:ingweb@cluster0.7jtxs.mongodb.net/ingweb?retryWrites=true&w=majority', {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-    useFindAndModify: true,
-    useCreateIndex: true
-})
-    .then(db => console.log('Db is connected'))
-    .catch(error => console.log(error))
+    useFindAndModify: false,
+    useCreateIndex: true,
+  })
+  .then(() => console.log('Db is connected'))
+  .catch(error => console.log(error));
