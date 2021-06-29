@@ -2,25 +2,23 @@ import Employee from '../models/Employee'
 import jwt from 'jsonwebtoken'
 import config from '../config'
 
-//Register
 export const signUp = async (req, res) => {
-    //Lo que espero recibir en el body para el registro del empleado
-    const {name, lastName, email, username, password, roles} = req.body;
-
-    //Se crea un objeto empleado
-    const newEmployee = new Employee({
-        name,
-        lastName,
-        email,
-        username,
-        password: await Employee.encodePassword(password),
-        roles
-    })
     
-    //Se registra en la base de datos
-    const savedEmployee = await newEmployee.save();
+    const {email, username, password} = req.body;
+        
+    const employeeFound = await Employee.findOne({email: email})
+    if (!employeeFound) return res.status(400).json({message: "User not found"})
+    
+    const updatedObject = {
+        username: username,
+        password: await Employee.encodePassword(password)
+    }
+  
+    const updatedEmployee = await Employee.findByIdAndUpdate(employeeFound._id, updatedObject, {
+        new: true,
+    });
 
-    res.json('signup')
+    return res.status(200).json(updatedEmployee)
 }
 
 //Login

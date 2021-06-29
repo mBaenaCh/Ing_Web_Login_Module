@@ -10,7 +10,6 @@ const employeeSchema = new Schema({
     },
     username: {
         type: String,
-        unique: true,
     },
     password: {
         type: String,
@@ -25,6 +24,8 @@ const employeeSchema = new Schema({
 });
 
 //Se usa statics para la creacion de metodos sin la instanciacion de objetos
+
+
 employeeSchema.statics.encodePassword = async (password) =>{
     //Metodo de encriptado
     const salt = await bcrypt.genSalt(10)
