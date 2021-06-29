@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
 mongoose
-  .connect('mongodb+srv://ingweb:ingweb@cluster0.7jtxs.mongodb.net/ingweb?retryWrites=true&w=majority', {
+  .connect(process.env.MONGODB_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useFindAndModify: false,
