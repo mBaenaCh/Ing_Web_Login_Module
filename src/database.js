@@ -1,7 +1,8 @@
 import mongoose from 'mongoose';
+import config from './config';
 
 mongoose
-  .connect(process.env.MONGODB_URI, {
+  .connect(config.MONGODB_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useFindAndModify: false,
