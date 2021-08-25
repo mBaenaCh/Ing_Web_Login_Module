@@ -1,22 +1,14 @@
-import Employee from '../models/Employee';
-import jwt from 'jsonwebtoken';
+import * as authService from '../services/auth.service';
+import BaseException from '../exceptions/baseException';
 
 export const signUp = async (req, res) => {
   try {
     const { username, password } = req.body;
     const { employeeId } = req.params;
-    const employeeFound = await Employee.findOne({ _id: employeeId });
-    if (!employeeFound) return res.status(400).json({ message: 'User not found' });
-    const encryptedPassword = await Employee.encodePassword(password);
-    const updatedObject = {
-      username,
-      password: encryptedPassword,
-    };
-    const updatedEmployee = await Employee.findByIdAndUpdate(employeeFound._id, updatedObject, {
-      new: true,
-    });
+    const updatedEmployee = await authService.signUpService(username, password, employeeId);
     return res.status(200).json(updatedEmployee);
   } catch (error) {
+    if (error instanceof BaseException) return res.status(error.getStatusCode()).json({ message: error.getErrorMessage() });
     return res.status(500).json({ message: 'Lo sentimos, ha ocurrido un problema' });
   }
 };
@@ -24,18 +16,10 @@ export const signUp = async (req, res) => {
 export const signIn = async (req, res) => {
   try {
     const { username, password } = req.body;
-    const employeeFound = await Employee.findOne({ username });
-    if (!employeeFound) return res.status(400).json({ message: 'User not found' });
-
-    const matchPassword = await Employee.comparePassword(password, employeeFound.password);
-    if (!matchPassword) return res.status(401).json({ message: 'Password or username is invalid' });
-
-    const token = jwt.sign({ id: employeeFound._id }, 'nursery_pet-api', {
-      expiresIn: 86400,
-    });
-
+    const token = await authService.signInService(username, password);
     return res.status(200).json({ token: token });
   } catch (error) {
+    if (error instanceof BaseException) return res.status(error.getStatusCode()).json({ message: error.getErrorMessage() });
     return res.status(500).json({ message: 'Lo sentimos, ha ocurrido un problema' });
   }
 };
