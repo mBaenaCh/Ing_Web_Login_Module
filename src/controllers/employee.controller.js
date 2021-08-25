@@ -1,36 +1,57 @@
-/* Archivo que define las funcionalidades a usar en cada ruta */
-import Employee from '../models/Employee'
+import * as employeeService from '../services/employee.service';
+import BaseException from '../exceptions/baseException';
 
-export const createEmployee = async (req,res) => {
-    const {name, lastName, email, username} = req.body
+export const createEmployee = async (req, res) => {
+  try {
+    const employee = req.body;
+    const hiredEmployee = await employeeService.hireEmployeeService(employee);
+    return res.status(201).json(hiredEmployee);
+  } catch (error) {
+    if (error instanceof BaseException) return res.status(error.getStatusCode()).json({ message: error.getErrorMessage() });
+    return res.status(500).json({ message: 'Lo sentimos, ha ocurrido un problema' });
+  }
+};
 
-    const newEmployee = new Employee({name, lastName, email, username})
+export const getEmployees = async (_, res) => {
+  try {
+    const employees = await employeeService.getEmployeesService();
+    return res.status(200).json(employees);
+  } catch (error) {
+    if (error instanceof BaseException) return res.status(error.getStatusCode()).json({ message: error.getErrorMessage() });
+    return res.status(500).json({ message: 'Lo sentimos, ha ocurrido un problema' });
+  }
+};
 
-    const savedEmployee = await newEmployee.save()
+export const getEmployeeById = async (req, res) => {
+  try {
+    const { employeeId } = req.params;
+    const employee = await employeeService.getEmployeeService(employeeId);
+    return res.status(200).json(employee);
+  } catch (error) {
+    if (error instanceof BaseException) return res.status(error.getStatusCode()).json({ message: error.getErrorMessage() });
+    return res.status(500).json({ message: 'Lo sentimos, ha ocurrido un problema' });
+  }
+};
 
-    res.status(201).json(savedEmployee)
-}
+export const updateEmployeeById = async (req, res) => {
+  try {
+    const { employeeId } = req.params;
+    const employee = req.body;
+    const updatedEmployee = await employeeService.updateEmployeeService(employeeId, employee);
+    return res.status(200).json(updatedEmployee);
+  } catch (error) {
+    if (error instanceof BaseException) return res.status(error.getStatusCode()).json({ message: error.getErrorMessage() });
+    return res.status(500).json({ message: 'Lo sentimos, ha ocurrido un problema' });
+  }
+};
 
-export const getEmployees = async (req,res) => {
-    const employees = await Employee.find()
-    res.json(employees)
-}
-
-export const getEmployeeById = async (req,res) => {
-    const employee = await Employee.findById(req.params.employeeId)
-    res.status(200).json(employee)
-}
-
-//Se puede usar modificando (en el body) el valor de password
-export const updateEmployeeById = async (req,res) => {
-    const updatedEmployee = await Employee.findByIdAndUpdate(req.params.employeeId, req.body, {
-        new: true
-    })
-    res.status(200).json(updatedEmployee)
-
-}
-
-export const deleteEmployeeById = async (req,res) => {
-    await Employee.findByIdAndDelete(req.params.employeeId)
-    res.status(204).json()
-}
+export const deleteEmployeeById = async (req, res) => {
+  try {
+    const { employeeId } = req.params;
+    await employeeService.deleteEmployeeService(employeeId);
+    return res.status(200).json({ message: 'El empleado ha sido eleminado' });
+  } catch (error) {
+    if (error instanceof BaseException) return res.status(error.getStatusCode()).json({ message: error.getErrorMessage() });
+    return res.status(500).json({ message: 'Lo sentimos, ha ocurrido un problema' });
+  }
+};

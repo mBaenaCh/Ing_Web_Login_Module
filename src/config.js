@@ -1,9 +1,8 @@
-/*Archivo de propiedades de configuracion:
-
-- Conexion base de datos
-- User base de datos
-- Puerto aplicacion*/
+import dotenv from 'dotenv';
+dotenv.config();
 
 export default {
-    SECRET: 'nursery_pet-api'
-}
+  JWT_SECRET: process.env.JWT_SECRET,
+  SERVER_PORT: process.env.SERVER_PORT,
+  MONGODB_URI: process.env.MONGODB_URI,
+};

@@ -1,17 +1,14 @@
-/* Archivo para la configuracion de mi servidor de express*/
-import express from 'express'
-import employeeRoutes from './routes/employee.routes'
-import authRoutes from './routes/auth.routes'
+import express from 'express';
+import cors from 'cors';
+import employeeRoutes from './routes/employee.routes';
+import authRoutes from './routes/auth.routes';
 
-const app = express()
+const app = express();
 
 app.use(express.json());
+app.use(cors());
 
-app.get('/api', (req, res) => {
-    res.json('welcome')
-})
-
-app.use('/api/employees', employeeRoutes)
-app.use('/api/auth', authRoutes)
+app.use('/api/auth', authRoutes);
+app.use('/api/employees', employeeRoutes);
 
 export default app;
