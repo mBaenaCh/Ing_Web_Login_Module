@@ -3,8 +3,12 @@ import bcrypt from 'bcryptjs';
 
 const employeeSchema = new Schema(
   {
-    name: String,
-    last_name: String,
+    name: {
+      type: String,
+    },
+    last_name: {
+      type: String,
+    },
     email: {
       type: String,
       unique: true,
@@ -15,12 +19,9 @@ const employeeSchema = new Schema(
     password: {
       type: String,
     },
-    roles: [
-      {
-        ref: 'Role',
-        type: Schema.Types.ObjectId,
-      },
-    ],
+    role: {
+      type: String,
+    },
   },
   {
     timestamps: true,

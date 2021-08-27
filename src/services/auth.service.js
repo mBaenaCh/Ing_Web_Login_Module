@@ -25,7 +25,7 @@ export const signInService = async (username, password) => {
   const matchPassword = await authRepository.comparePassword(password, employeeFound.password);
   if (!matchPassword) throw new WrongPasswordException('Usuario o contraseña incorrecto');
 
-  const token = jwt.sign({ id: employeeFound._id }, 'nursery_pet-api', {
+  const token = jwt.sign({ id: employeeFound._id, role: employeeFound.role }, 'nursery_pet-api', {
     expiresIn: 86400,
   });
 
