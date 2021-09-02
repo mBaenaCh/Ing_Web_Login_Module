@@ -3,6 +3,7 @@ import * as authRepository from '../repository/auth.repository';
 import EmptyFieldException from '../exceptions/emptyFieldException';
 import UserNotFoundException from '../exceptions/userNotFoundException';
 import WrongPasswordException from '../exceptions/wrongPasswordException';
+import config from '../config';
 
 export const signUpService = async (username, password, employeeId) => {
   if (username === '' || password === '') throw new EmptyFieldException('La información de registro debe estar completa');
@@ -25,7 +26,7 @@ export const signInService = async (username, password) => {
   const matchPassword = await authRepository.comparePassword(password, employeeFound.password);
   if (!matchPassword) throw new WrongPasswordException('Usuario o contraseña incorrecto');
 
-  const token = jwt.sign({ id: employeeFound._id, role: employeeFound.role }, 'nursery_pet-api', {
+  const token = jwt.sign({ id: employeeFound._id, role: employeeFound.role }, config.JWT_SECRET, {
     expiresIn: 86400,
   });
 
