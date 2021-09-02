@@ -9,7 +9,7 @@ export const hireEmployeeService = async employee => {
     throw new EmptyFieldException('La información del empleado debe esta completa, no deje campos vacios');
 
   const hiredEmployee = await employeeRepository.saveEmployeeRepository(employee);
-  await employeeEmailService(hiredEmployee._id, hiredEmployee.name, hiredEmployee.email);
+  // await employeeEmailService(hiredEmployee._id, hiredEmployee.name, hiredEmployee.email);
   return hiredEmployee;
 };
 
