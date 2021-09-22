@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import employeeRoutes from './routes/employee.routes';
 import authRoutes from './routes/auth.routes';
+import verifyTokenRoute from './routes/verifyToken.routes';
 
 const app = express();
 
@@ -10,5 +11,12 @@ app.use(cors());
 
 app.use('/api/auth', authRoutes);
 app.use('/api/employees', employeeRoutes);
+app.use('/api/verifytoken', verifyTokenRoute);
+
+app.use(function (err, req, res, next) {
+  if (err.name === 'UnauthorizedError') {
+    return res.status(401).json({ message: 'Unauthorized' });
+  }
+});
 
 export default app;
