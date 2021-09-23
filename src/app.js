@@ -11,4 +11,10 @@ app.use(cors());
 app.use('/api/auth', authRoutes);
 app.use('/api/employees', employeeRoutes);
 
+app.use((err, req, res, next) => {
+  if (err.name === 'UnauthorizedError') {
+    return res.status(401).json({ message: 'Unauthorized' });
+  }
+});
+
 export default app;
