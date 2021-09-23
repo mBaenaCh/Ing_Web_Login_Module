@@ -13,6 +13,9 @@ const employeeSchema = new Schema(
       type: String,
       unique: true,
     },
+    document: {
+      type: String,
+    },
     username: {
       type: String,
     },
