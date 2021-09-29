@@ -18,8 +18,8 @@ export const signUp = async (req, res) => {
 export const signIn = async (req, res) => {
   try {
     const { username, password } = req.body;
-    const token = await authService.signInService(username, password);
-    return res.status(200).json({ token: token });
+    const loginInfo = await authService.signInService(username, password);
+    return res.status(200).json(loginInfo);
   } catch (error) {
     if (error instanceof BaseException) return res.status(error.getStatusCode()).json({ message: error.getErrorMessage() });
     return res.status(500).json({ message: 'Lo sentimos, ha ocurrido un problema' });

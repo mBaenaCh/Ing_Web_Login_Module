@@ -30,5 +30,9 @@ export const signInService = async (username, password) => {
     expiresIn: 86400,
   });
 
-  return token;
+  return {
+    token,
+    role: employeeFound.role,
+    id: employeeFound._id,
+  };
 };
