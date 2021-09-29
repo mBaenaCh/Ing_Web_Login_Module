@@ -21,7 +21,7 @@ export const signUpService = async (username, password, employeeId) => {
 
 export const signInService = async (username, password) => {
   const employeeFound = await authRepository.getEmployeeByUsernameRepository(username);
-  if (!employeeFound) throw new UserNotFoundException('El usuario no se encuentra registrado');
+  if (!employeeFound) throw new UserNotFoundException('Usuario o contraseña incorrecto');
 
   const matchPassword = await authRepository.comparePassword(password, employeeFound.password);
   if (!matchPassword) throw new WrongPasswordException('Usuario o contraseña incorrecto');
